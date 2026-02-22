@@ -1,13 +1,16 @@
 const express = require("express");
 const User = require("../Database/auth");
 const bcrypt = require("bcryptjs");
+const dotenv = require("dotenv");
 const jwt = require("jsonwebtoken");
 const { sendVerificationEmail } = require("../utils/sendEmail");
-const {authMiddleware} = require("../middleware/authMiddleware");
+const { authMiddleware } = require("../middleware/authMiddleware");
 
+dotenv.config();
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || "aabc6a9cfcfc05011de1978688bea7e28a045a9fa2fce2c15038c24a1a26e67f";
+const JWT_SECRET = process.env.JWT_SECRET;
+
 
 router.post("/signin", async (req, res) => {
   try {
@@ -53,6 +56,7 @@ router.post("/signin", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 router.get("/verify/:token", async (req, res) => {
   try {
@@ -121,6 +125,7 @@ router.get("/me", authMiddleware, async (req, res) => {
   });
 });
 
+
 router.post("/logout", authMiddleware, async (req, res) => {
   try {
     req.user.tokens = req.user.tokens.filter((t) => t.token !== req.token);
@@ -130,6 +135,21 @@ router.post("/logout", authMiddleware, async (req, res) => {
   } catch (err) {
     console.error("Logout Error:", err);
     res.status(500).json({ message: "Logout failed" });
+  }
+});
+
+
+router.delete("/delete", authMiddleware, async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.user._id);
+
+    res.status(200).json({
+      success: true,
+      message: "Account deleted successfully",
+    });
+  } catch (err) {
+    console.error("Delete Account Error:", err);
+    res.status(500).json({ message: "Failed to delete account" });
   }
 });
 

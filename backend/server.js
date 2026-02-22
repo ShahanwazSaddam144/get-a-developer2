@@ -26,7 +26,7 @@ const limiter = rateLimit({
 app.use(limiter);
 
 //Routes
-app.use("/api/auth", Auth);
+app.use("/api/auth", Auth, limiter);
 
 // Mongoose connect
 mongoose
@@ -44,6 +44,6 @@ app.listen(Port,(err)=>{
     if(err){
         console.err("❌❌ Error Connecting Server");
     }else{
-        console.log(`❌❌ Server Running at http://localhost:${Port}`);
+        console.log(`✅✅ Server Running at http://localhost:${Port}`);
     }
 });
