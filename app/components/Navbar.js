@@ -64,7 +64,6 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Top Navbar */}
       <nav className="fixed top-0 left-0 w-full z-50 text-white bg-[#121212] border-b border-[#2A2A2A] px-6 py-4 flex items-center justify-between">
         <h1
           onClick={() => router.push("/")}
@@ -107,7 +106,6 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Overlay */}
       {menuOpen && (
         <div
           onClick={() => setMenuOpen(false)}
@@ -115,13 +113,11 @@ const Navbar = () => {
         />
       )}
 
-      {/* Right Side Menu */}
       <div
         className={`fixed top-0 right-0 w-80 bg-[#121212] border-l border-[#2A2A2A] min-h-screen z-50 transform transition-transform duration-300 ${
           menuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        {/* Menu Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-[#2A2A2A]">
           <h2 className="font-semibold">Menu</h2>
           <button onClick={() => setMenuOpen(false)}>
@@ -129,7 +125,6 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* Mobile avatar + notification */}
         {user && (
           <div className="md:hidden flex items-center gap-5 px-6 py-4 border-b border-[#2A2A2A]">
             <div className="w-11 h-11 rounded-full bg-blue-600 flex items-center justify-center font-bold">
@@ -145,7 +140,6 @@ const Navbar = () => {
           </div>
         )}
 
-        {/* Links */}
         <div className="flex flex-col p-6 gap-6 text-gray-300">
           <button
             onClick={() => router.push("/")}
@@ -155,29 +149,33 @@ const Navbar = () => {
             Home
           </button>
 
-          <button
-            onClick={() => router.push("/dashboard")}
-            className="flex items-center gap-3 hover:text-blue-400 transition"
-          >
-            <LayoutDashboard size={18} />
-            Dashboard
-          </button>
+          {user && (
+            <>
+              <button
+                onClick={() => router.push("/Dashboard")}
+                className="flex items-center gap-3 hover:text-blue-400 transition"
+              >
+                <LayoutDashboard size={18} />
+                Dashboard
+              </button>
 
-          <button
-            onClick={() => router.push("/developers")}
-            className="flex items-center gap-3 hover:text-blue-400 transition"
-          >
-            <Code size={18} />
-            Developers
-          </button>
+              <button
+                onClick={() => router.push("/profile")}
+                className="flex items-center gap-3 hover:text-blue-400 transition"
+              >
+                <User size={18} />
+                Profile
+              </button>
+            </>
+          )}
 
-          <button
-            onClick={() => router.push("/profile")}
-            className="flex items-center gap-3 hover:text-blue-400 transition"
-          >
-            <User size={18} />
-            Profile
-          </button>
+                <button
+                onClick={() => router.push("/Developer")}
+                className="flex items-center gap-3 hover:text-blue-400 transition"
+              >
+                <Code size={18} />
+                Developers
+              </button>
 
           <button
             onClick={() => router.push("/support")}

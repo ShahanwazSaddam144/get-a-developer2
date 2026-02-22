@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
 
-const Developer = () => {
+const Dashboard = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
@@ -12,7 +12,7 @@ const Developer = () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      router.replace("/");
+      router.replace("/"); 
       return;
     }
 
@@ -24,7 +24,7 @@ const Developer = () => {
         return res.json();
       })
       .then((data) => {
-        if (!data.success) router.replace("/");
+        if (!data.success) router.replace("/"); 
       })
       .catch(() => router.replace("/"))
       .finally(() => setLoading(false));
@@ -35,9 +35,13 @@ const Developer = () => {
   return (
     <>
       <Navbar />
-      <section></section>
+      <main className="pt-24 px-6">
+        <h1 className="text-3xl md:text-4xl text-white font-bold">
+          Welcome to your Dashboard
+        </h1>
+      </main>
     </>
   );
 };
 
-export default Developer;
+export default Dashboard;
