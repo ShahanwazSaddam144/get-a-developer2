@@ -152,15 +152,7 @@ const Navbar = () => {
           {user && (
             <>
               <button
-                onClick={() => router.push("/Dashboard")}
-                className="flex items-center gap-3 hover:text-blue-400 transition"
-              >
-                <LayoutDashboard size={18} />
-                Dashboard
-              </button>
-
-              <button
-                onClick={() => router.push("/profile")}
+                onClick={() => router.push("/Profile")}
                 className="flex items-center gap-3 hover:text-blue-400 transition"
               >
                 <User size={18} />
