@@ -73,6 +73,61 @@ router.get("/my-profile", authMiddleware, async (req, res) => {
   }
 });
 
+router.put("/my-profile", authMiddleware, async (req, res) => {
+  try {
+    const { name, email, skills, desc, category, projects, portfolio, avator } =
+      req.body;
+
+    const profile = await Profile.findOne({ user: req.user._id });
+
+    if (!profile) {
+      return res.status(404).json({
+        success: false,
+        message: "Profile not found",
+      });
+    }
+
+    if (
+      !name ||
+      !email ||
+      !skills ||
+      !desc ||
+      !category ||
+      !projects ||
+      !portfolio ||
+      !avator
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Please fill all fields",
+      });
+    }
+
+    profile.name = name;
+    profile.email = email;
+    profile.skills = skills;
+    profile.desc = desc;
+    profile.category = category;
+    profile.projects = projects;
+    profile.portfolio = portfolio;
+    profile.avator = avator;
+
+    await profile.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      profile,
+    });
+  } catch (err) {
+    console.error("Update Profile Error:", err);
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+});
+
 router.delete("/my-profile-delete", authMiddleware, async (req, res) => {
   try {
     const profile = await Profile.findOne({ user: req.user._id });

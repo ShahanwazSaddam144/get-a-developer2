@@ -26,6 +26,7 @@ const skillOptions = [
   "Chakra UI",
   "Sass",
   "Less",
+  "C",
   "Python",
   "Django",
   "Flask",
@@ -75,7 +76,10 @@ const Profile = () => {
   const [profile, setProfile] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const [popup, setPopup] = useState({ show: false, message: "", type: "" });
-  const [currentStep, setCurrentStep] = useState(1);    const [expandDesc, setExpandDesc] = useState(false);  const [formData, setFormData] = useState({
+  const [currentStep, setCurrentStep] = useState(1);
+  const [isEditing, setIsEditing] = useState(false);
+  const [expandDesc, setExpandDesc] = useState(false);
+  const [formData, setFormData] = useState({
     name: "",
     email: "",
     skills: [],
@@ -188,6 +192,22 @@ const Profile = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
+  const handleEdit = () => {
+    setIsEditing(true);
+    setCurrentStep(1);
+    setFormData({
+      name: profile.name,
+      email: profile.email,
+      skills: Array.isArray(profile.skills) ? profile.skills : [],
+      skillInput: "",
+      desc: profile.desc,
+      category: profile.category,
+      projects: Array.isArray(profile.projects) ? profile.projects.map((p) => ({ title: p, link: p })) : [{ title: "", link: "" }],
+      portfolio: profile.portfolio,
+      avator: profile.avator,
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -208,8 +228,11 @@ const Profile = () => {
     }
 
     const token = localStorage.getItem("token");
-    const res = await fetch("http://localhost:5000/api/profile", {
-      method: "POST",
+    const url = isEditing ? "http://localhost:5000/api/my-profile" : "http://localhost:5000/api/profile";
+    const method = isEditing ? "PUT" : "POST";
+
+    const res = await fetch(url, {
+      method: method,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -226,10 +249,11 @@ const Profile = () => {
       setProfile(data.profile);
       setPopup({
         show: true,
-        message: "Profile Created Successfully",
+        message: isEditing ? "Profile Updated Successfully" : "Profile Created Successfully",
         type: "success",
       });
       setCurrentStep(1);
+      setIsEditing(false);
     } else {
       setPopup({
         show: true,
@@ -263,7 +287,7 @@ const Profile = () => {
     <>
       <Navbar />
       <main className="min-h-screen bg-[#121212] text-white pt-24 px-6 pb-12 flex justify-center">
-        {profile ? (
+        {profile && !isEditing ? (
           <div className="w-full max-w-4xl">
             {/* Header Section */}
             <div className="bg-gradient-to-br from-[#1e1e1e] to-[#161616] p-8 rounded-t-3xl border border-gray-800 border-b-0">
@@ -374,6 +398,12 @@ const Profile = () => {
             {/* Footer Actions */}
             <div className="bg-[#161616] p-6 rounded-b-3xl border border-gray-800 border-t-0 flex gap-4">
               <button
+                onClick={handleEdit}
+                className="flex-1 px-6 py-3 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 hover:border-blue-500/50 rounded-xl font-semibold transition-all duration-200"
+              >
+                ✏️ Edit Profile
+              </button>
+              <button
                 onClick={() => setShowConfirm(true)}
                 className="flex-1 px-6 py-3 bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-500/30 hover:border-red-500/50 rounded-xl font-semibold transition-all duration-200"
               >
@@ -384,6 +414,7 @@ const Profile = () => {
         ) : (
           <div className="w-full max-w-3xl">
             {/* Step Indicator */}
+            {true && (
             <div className="mb-8">
               <div className="flex items-center justify-between mb-4">
                 {steps.map((step) => (
@@ -423,17 +454,24 @@ const Profile = () => {
                 />
               </div>
             </div>
+            )}
 
             {/* Form Container */}
             <div className="bg-[#1e1e1e] p-8 rounded-2xl border border-gray-800 shadow-xl">
               <h1 className="text-3xl font-bold mb-2 text-blue-500">
-                {steps[currentStep - 1].title}
+                {isEditing ? "Edit Profile" : steps[currentStep - 1].title}
               </h1>
               <p className="text-gray-400 mb-8">
-                Step {currentStep} of {steps.length}
+                {isEditing ? "Update your profile information" : `Step ${currentStep} of ${steps.length}`}
               </p>
 
-              <form onSubmit={currentStep === steps.length ? handleSubmit : (e) => e.preventDefault()}>
+              <form onSubmit={(e) => {
+                if (currentStep === steps.length || isEditing) {
+                  handleSubmit(e);
+                } else {
+                  e.preventDefault();
+                }
+              }}>
                 {/* Step 1: Basic Info */}
                 {currentStep === 1 && (
                   <div className="space-y-6">
@@ -441,18 +479,22 @@ const Profile = () => {
                       <label className="text-gray-300 font-semibold mb-2 block">Full Name</label>
                       <input
                         type="text"
+                        name="name"
                         value={formData.name}
-                        disabled
-                        className="w-full p-4 rounded-lg bg-[#121212] border border-gray-700 text-gray-400 placeholder-gray-600"
+                        onChange={handleChange}
+                        disabled={!isEditing}
+                        className={`w-full p-4 rounded-lg bg-[#121212] border border-gray-700 focus:border-blue-500 focus:outline-none text-white placeholder-gray-600 ${!isEditing ? 'text-gray-400' : ''}`}
                       />
                     </div>
                     <div>
                       <label className="text-gray-300 font-semibold mb-2 block">Email Address</label>
                       <input
                         type="email"
+                        name="email"
                         value={formData.email}
-                        disabled
-                        className="w-full p-4 rounded-lg bg-[#121212] border border-gray-700 text-gray-400 placeholder-gray-600"
+                        onChange={handleChange}
+                        disabled={!isEditing}
+                        className={`w-full p-4 rounded-lg bg-[#121212] border border-gray-700 focus:border-blue-500 focus:outline-none text-white placeholder-gray-600 ${!isEditing ? 'text-gray-400' : ''}`}
                       />
                     </div>
                   </div>
@@ -669,23 +711,23 @@ const Profile = () => {
                 <div className="flex gap-4 mt-10 pt-8 border-t border-gray-700">
                   <button
                     type="button"
-                    onClick={handlePrev}
-                    disabled={currentStep === 1}
+                    onClick={isEditing ? () => setIsEditing(false) : handlePrev}
+                    disabled={currentStep === 1 && !isEditing}
                     className={`flex-1 p-4 rounded-lg font-semibold transition ${
-                      currentStep === 1
+                      currentStep === 1 && !isEditing
                         ? "bg-gray-700/30 text-gray-600 cursor-not-allowed"
                         : "bg-gray-700 hover:bg-gray-600 text-white"
                     }`}
                   >
-                    ← Previous
+                    {isEditing ? "Cancel" : "← Previous"}
                   </button>
 
-                  {currentStep === steps.length ? (
+                  {currentStep === steps.length || isEditing ? (
                     <button
                       type="submit"
                       className="flex-1 p-4 rounded-lg font-semibold bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white transition"
                     >
-                      Create Profile 🚀
+                      {isEditing ? "Update Profile ✨" : "Create Profile 🚀"}
                     </button>
                   ) : (
                     <button
