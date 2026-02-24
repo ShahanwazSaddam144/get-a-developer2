@@ -12,7 +12,7 @@ const authMiddleware = async (req, res, next) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const token = authHeader.split(" ")[0];
+    const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, JWT_SECRET);
 
     const user = await User.findById(decoded.id).select("-password");

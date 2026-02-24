@@ -204,6 +204,7 @@ const Auth = () => {
                     placeholder="••••••••"
                     onChange={handleChange}
                     required
+                    autoComplete="current-password"
                     className="w-full px-4 py-3 rounded-lg bg-[#121212] border border-gray-700 focus:border-blue-500 focus:outline-none text-white placeholder-gray-600 transition"
                   />
                   <button

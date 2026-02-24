@@ -82,7 +82,8 @@ const Navbar = () => {
                 </span>
               </button>
 
-              <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-bold cursor-pointer hover:scale-105 transition">
+              <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-bold cursor-pointer hover:scale-105 transition"
+              onClick={()=>{router.push("/Profile")}}>
                 {initials}
               </div>
             </div>
