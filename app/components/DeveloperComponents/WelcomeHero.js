@@ -61,7 +61,7 @@ const WelcomeHero = () => {
           <div className="relative z-10">
             <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
               Welcome back, <span className="text-blue-500">{user?.name}</span>
-              {" Guest "}
+              {""}
               👋
             </h1>
 
