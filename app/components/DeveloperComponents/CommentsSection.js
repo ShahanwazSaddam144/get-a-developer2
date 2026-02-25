@@ -168,9 +168,19 @@ const CommentsSection = ({ profileId }) => {
           comments.map((comment) => (
             <div key={comment._id} className="bg-[#121212] p-6 rounded-lg border border-gray-700">
               <div className="flex items-start justify-between mb-3">
-                <div>
-                  <h4 className="text-white font-semibold">{comment.user?.name || "Anonymous"}</h4>
-                  <p className="text-gray-500 text-sm">{comment.email}</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold border border-gray-600">
+                    {comment.user?.name
+                      ? comment.user.name
+                          .split(" ")
+                          .map((word) => word[0])
+                          .join("")
+                          .toUpperCase()
+                      : "A"}
+                  </div>
+                  <h4 className="text-white font-semibold">
+                    {comment.user?.name || "Anonymous"}
+                  </h4>
                 </div>
                 {renderStars(comment.rating)}
               </div>
