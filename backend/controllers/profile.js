@@ -5,7 +5,7 @@ const { authMiddleware } = require("../middleware/authMiddleware");
 
 router.post("/profile", authMiddleware, async (req, res) => {
   try {
-    const { name, skills, desc, category, projects, portfolio, avator } =
+    const { name, skills, desc, category, projects, portfolio, avator, price, phone } =
       req.body;
 
     if (
@@ -15,7 +15,9 @@ router.post("/profile", authMiddleware, async (req, res) => {
       !category ||
       !projects ||
       !portfolio ||
-      !avator
+      !avator ||
+      !price ||
+      !phone
     ) {
       return res.status(400).json({
         success: false,
@@ -41,6 +43,8 @@ router.post("/profile", authMiddleware, async (req, res) => {
       projects,
       portfolio,
       avator,
+      price,
+      phone
     });
 
     await newProfile.save();
@@ -75,7 +79,7 @@ router.get("/my-profile", authMiddleware, async (req, res) => {
 
 router.put("/my-profile", authMiddleware, async (req, res) => {
   try {
-    const { name, email, skills, desc, category, projects, portfolio, avator } =
+    const { name, email, skills, desc, category, projects, portfolio, avator, price, phone } =
       req.body;
 
     const profile = await Profile.findOne({ user: req.user._id });
@@ -95,7 +99,9 @@ router.put("/my-profile", authMiddleware, async (req, res) => {
       !category ||
       !projects ||
       !portfolio ||
-      !avator
+      !avator ||
+      !price ||
+      !phone
     ) {
       return res.status(400).json({
         success: false,
@@ -111,6 +117,8 @@ router.put("/my-profile", authMiddleware, async (req, res) => {
     profile.projects = projects;
     profile.portfolio = portfolio;
     profile.avator = avator;
+    profile.price = price;
+    profile.phone = phone;
 
     await profile.save();
 
@@ -160,6 +168,19 @@ router.get("/user-profile", async(req,res)=>{
     res.status(200).json({success: true, message: "Profile fetch successfully", data: userProfiles});
   } catch(err){
     res.status(500).json({success: true, message: "Failed to Fetch Profiles"});
+  }
+});
+
+router.get("/profile/:id", async(req,res)=>{
+  try{
+    const profile = await Profile.findById(req.params.id);
+    if(!profile){
+      return res.status(404).json({success: false, message: "Profile not found"});
+    }
+    res.status(200).json({success: true, message: "Profile fetch successfully", profile: profile});
+  } catch(err){
+    console.error("Fetch Profile Error:", err);
+    res.status(500).json({success: false, message: "Failed to Fetch Profile"});
   }
 });
 

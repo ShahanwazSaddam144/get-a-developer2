@@ -1,7 +1,7 @@
 import React from "react";
 import { Search } from "lucide-react";
 
-const SearchBar = () => {
+const SearchBar = ({ searchQuery, setSearchQuery }) => {
   const categories = [
     "Frontend Developer",
     "Backend Developer",
@@ -10,6 +10,13 @@ const SearchBar = () => {
     "UI/UX Designer",
     "AI / ML Engineer",
   ];
+
+  const handleCategoryClick = (category) => {
+    setSearchQuery(category);
+  };
+
+  const handleSearch = () => {
+  };
 
   return (
     <section className="mt-20 mb-10 px-6 flex flex-col items-center justify-center text-center">
@@ -29,9 +36,11 @@ const SearchBar = () => {
         <input
           type="text"
           placeholder="Search for developers, skills, technologies..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
           className="flex-1 px-4 py-3 bg-transparent text-white outline-none placeholder-gray-500"
         />
-        <button className="bg-blue-600 hover:bg-blue-700 px-6 py-3 transition duration-300 flex items-center gap-2 text-white font-medium">
+        <button onClick={handleSearch} className="bg-blue-600 hover:bg-blue-700 px-6 py-3 transition duration-300 flex items-center gap-2 text-white font-medium">
           <Search size={18} />
           Search
         </button>
@@ -42,6 +51,7 @@ const SearchBar = () => {
         {categories.map((cat, index) => (
           <button
             key={index}
+            onClick={() => handleCategoryClick(cat)}
             className="px-5 py-2 bg-[#1e1e1e] border border-gray-700 text-gray-300 rounded-full hover:bg-blue-600 hover:text-white hover:border-blue-600 transition duration-300"
           >
             {cat}

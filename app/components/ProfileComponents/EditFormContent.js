@@ -23,6 +23,17 @@ const EditFormContent = ({ formData, skillOptions, onChange, onSkillAdd, onSkill
         />
       </div>
 
+        <div>
+        <label className="text-gray-300 font-semibold mb-2 block">Phone Number</label>
+        <input
+          type="text"
+          name="phone"
+          value={formData.phone}
+          onChange={onChange}
+          className="w-full p-4 rounded-lg bg-[#121212] border border-gray-700 focus:border-blue-500 focus:outline-none text-white placeholder-gray-600"
+        />
+      </div>
+
       <div>
         <label className="text-gray-300 font-semibold mb-2 block">Professional Description</label>
         <textarea
@@ -163,6 +174,30 @@ const EditFormContent = ({ formData, skillOptions, onChange, onSkillAdd, onSkill
           value={formData.portfolio}
           onChange={onChange}
           placeholder="https://yourportfolio.com"
+          className="w-full p-4 rounded-lg bg-[#121212] border border-gray-700 focus:border-blue-500 focus:outline-none text-white placeholder-gray-600"
+        />
+      </div>
+
+      <div>
+        <label className="text-gray-300 font-semibold mb-2 block">Price per Hour</label>
+        <input
+          type="number"
+          name="price"
+          value={formData.price}
+          onChange={onChange}
+          placeholder="e.g., 50"
+          className="w-full p-4 rounded-lg bg-[#121212] border border-gray-700 focus:border-blue-500 focus:outline-none text-white placeholder-gray-600"
+        />
+      </div>
+
+      <div>
+        <label className="text-gray-300 font-semibold mb-2 block">Phone Number</label>
+        <input
+          type="tel"
+          name="phone"
+          value={formData.phone}
+          onChange={onChange}
+          placeholder="e.g., +1234567890"
           className="w-full p-4 rounded-lg bg-[#121212] border border-gray-700 focus:border-blue-500 focus:outline-none text-white placeholder-gray-600"
         />
       </div>

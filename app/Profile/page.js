@@ -106,6 +106,8 @@ const Profile = () => {
     projects: [{ title: "", link: "" }],
     portfolio: "",
     avator: "",
+    price: "",
+    phone: "",
   });
 
   const steps = [
@@ -222,6 +224,8 @@ const Profile = () => {
       projects: Array.isArray(profile.projects) ? profile.projects.map((p) => ({ title: p, link: p })) : [{ title: "", link: "" }],
       portfolio: profile.portfolio,
       avator: profile.avator,
+      price: profile.price,
+      phone: profile.phone
     });
   };
 
@@ -234,7 +238,9 @@ const Profile = () => {
       formData.skills.length === 0 ||
       formData.projects.some((p) => !p.title || !p.link) ||
       !formData.portfolio ||
-      !formData.avator
+      !formData.avator ||
+      !formData.price ||
+      !formData.phone
     ) {
       setPopup({
         show: true,
@@ -257,7 +263,7 @@ const Profile = () => {
       body: JSON.stringify({
         ...formData,
         skills: formData.skills,
-        projects: formData.projects.map((p) => p.title),
+        projects: formData.projects.map((p) => p.link),
       }),
     });
 

@@ -14,6 +14,7 @@ const ProfileHeader = ({ profile, expandDesc, setExpandDesc }) => {
           <h2 className="text-4xl font-bold text-white mb-2">{profile.name}</h2>
           <p className="text-blue-400 text-lg font-semibold mb-1">{profile.category}</p>
           <p className="text-gray-500 text-sm">{profile.email}</p>
+          {profile.phone && <p className="text-gray-500 text-sm">{profile.phone}</p>}
         </div>
       </div>
     </div>

@@ -47,6 +47,16 @@ const profileSchema = new mongoose.Schema(
       type: String,   
       required: true,
     },
+
+    price: {
+      type: Number,
+      required: true,
+    },
+
+    phone: {
+      type: Number,
+      required: true,
+    }
   },
   { timestamps: true }
 );

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Navbar from "../../components/Navbar";
+import CommentsSection from "../../components/DeveloperComponents/CommentsSection";
 
 const DeveloperProfile = () => {
   const params = useParams();
@@ -59,7 +60,7 @@ const DeveloperProfile = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-[#121212] text-white py-10 px-6">
+      <div className="min-h-screen mt-10 bg-[#121212] text-white py-10 px-6">
         <div className="max-w-5xl mx-auto">
           {/* Header Section */}
           <div className="bg-gradient-to-br from-[#1e1e1e] to-[#161616] rounded-3xl p-8 mb-8 border border-gray-800 shadow-lg">
@@ -76,7 +77,9 @@ const DeveloperProfile = () => {
                 <div className="flex items-center gap-6">
                   <div className="bg-blue-600/20 px-6 py-3 rounded-lg border border-blue-600/50">
                     <p className="text-gray-400 text-sm mb-1">Hourly Rate</p>
-                    <p className="text-3xl font-bold text-blue-400">${profile.price}/hr</p>
+                    <p className="text-3xl font-bold text-blue-400">
+                      {profile.price ? `$${profile.price}/hr` : "Contact for pricing"}
+                    </p>
                   </div>
                   <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-semibold transition duration-300 border border-blue-500">
                     Hire Now
@@ -170,10 +173,13 @@ const DeveloperProfile = () => {
             </div>
           )}
 
+          {/* Comments Section */}
+          <CommentsSection profileId={profile._id} />
+
           {/* Back Button */}
           <button
             onClick={() => router.back()}
-            className="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg font-medium transition border border-gray-700"
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition border border-gray-700"
           >
             ← Go Back
           </button>
