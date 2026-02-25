@@ -51,7 +51,7 @@ const WelcomeHero = () => {
 
   return (
     <>
-      <section className="min-h-screen bg-[#0f0f0f] text-white pt-24 px-6">
+      <section className="text-white pt-24 px-6">
         {/* ✨ CLASSY WELCOME HEADER */}
         <div className="relative overflow-hidden bg-gradient-to-r from-[#1e1e1e] to-[#151515] p-10 rounded-3xl border border-gray-800 shadow-2xl transition-all duration-500 hover:shadow-blue-500/10">
           {/* Background Glow Effects */}

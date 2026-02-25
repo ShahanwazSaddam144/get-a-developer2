@@ -154,4 +154,13 @@ router.delete("/my-profile-delete", authMiddleware, async (req, res) => {
   }
 });
 
+router.get("/user-profile", async(req,res)=>{
+  try{
+    const userProfiles = await Profile.find();
+    res.status(200).json({success: true, message: "Profile fetch successfully", data: userProfiles});
+  } catch(err){
+    res.status(500).json({success: true, message: "Failed to Fetch Profiles"});
+  }
+});
+
 module.exports = router;
