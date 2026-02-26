@@ -44,10 +44,10 @@ mongoose
   });
 
 // Server connect
-app.listen(Port,(err)=>{
+app.listen(7860,(err)=>{
     if(err){
-        console.err("❌❌ Error Connecting Server");
+        console.error("❌❌ Error Connecting Server");
     }else{
-        console.log(`✅✅ Server Running at http://localhost:${Port}`);
+        console.log(`✅✅ Server Running at http://localhost:7860`);
     }
 });
