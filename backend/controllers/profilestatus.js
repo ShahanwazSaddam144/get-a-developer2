@@ -14,10 +14,7 @@ router.post("/profilestatus", authMiddleware, async (req, res) => {
         .json({ success: false, message: "Availability is required" });
     }
 
-    const existing = await ProfileStatus.findOne({
-      email: req.user.email,
-    });
-
+    const existing = await ProfileStatus.findOne({ user: req.user._id });
     if (existing) {
       return res.status(400).json({
         success: false,
@@ -44,6 +41,28 @@ router.post("/profilestatus", authMiddleware, async (req, res) => {
   }
 });
 
+router.get("/profilestatus", authMiddleware, async (req, res) => {
+  try {
+    const status = await ProfileStatus.findOne({ user: req.user._id });
+
+    if (!status) {
+      return res.status(404).json({
+        success: false,
+        message: "Profile status not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Profile status fetched successfully",
+      status,
+    });
+  } catch (err) {
+    console.error("GET Profile Status Error:", err);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+});
+
 router.put("/profilestatus", authMiddleware, async (req, res) => {
   try {
     const { availability } = req.body;
@@ -55,7 +74,7 @@ router.put("/profilestatus", authMiddleware, async (req, res) => {
     }
 
     const updatedStatus = await ProfileStatus.findOneAndUpdate(
-      { email: req.user.email }, 
+      { user: req.user._id }, 
       { availability, updatedAt: new Date() },
       { new: true }
     );
@@ -101,5 +120,6 @@ router.get("/profilestatus/:id", async (req, res) => {
     res.status(500).json({ success: false, message: "Server Error" });
   }
 });
+
 
 module.exports = router;

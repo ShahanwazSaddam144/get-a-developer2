@@ -10,47 +10,58 @@ const DeveloperProfile = () => {
   const router = useRouter();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [status, setStatus] = useState(null); // <-- added for availability
+  const [status, setStatus] = useState(null); 
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await fetch(`http://localhost:5000/api/profile/${params.id}`);
-        const data = await res.json();
+  
+useEffect(() => {
+  const fetchProfile = async () => {
+    try {
+      // Fetch profile by profile ID
+      const res = await fetch(`http://localhost:5000/api/profile/${params.id}`);
+      const data = await res.json();
 
-        if (data.success) {
-          setProfile(data.profile);
+      if (data.success) {
+        const profileData = data.profile;
+        setProfile(profileData);
 
-          // Fetch profile availability status
+        // Fetch status using the user ID (not profile _id)
+        if (profileData.user) {
           try {
-            const statusRes = await fetch(`http://localhost:5000/api/profilestatus/${params.id}`);
+            const statusRes = await fetch(
+              `http://localhost:5000/api/profilestatus/${profileData.user}`
+            );
             const statusData = await statusRes.json();
 
             if (statusData.success) {
               setStatus(statusData.status);
             } else {
-              setStatus({ available: false }); // default if no status found
+              // Default to Available if not found
+              setStatus({ availability: "Available" });
             }
           } catch (err) {
             console.error("Failed to fetch profile status:", err);
-            setStatus({ available: false });
+            setStatus({ availability: "Available" });
           }
-
         } else {
-          router.push("/Developer");
+          setStatus({ availability: "Available" });
         }
-      } catch (err) {
-        console.error("Failed to fetch profile:", err);
-        router.push("/Developer");
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    if (params.id) {
-      fetchProfile();
+      } else {
+        router.push("/Developer");
+      }
+    } catch (err) {
+      console.error("Failed to fetch profile:", err);
+      router.push("/Developer");
+    } finally {
+      setLoading(false);
     }
-  }, [params.id, router]);
+  };
+
+  if (params.id) {
+    fetchProfile();
+  }
+}, [params.id, router]);
+
 
   if (loading) {
     return (
@@ -102,7 +113,7 @@ const DeveloperProfile = () => {
                     />
                     <div
                       className={`absolute bottom-2 right-2 w-4 h-4 rounded-full border-2 border-[#1e1e1e] shadow-lg ${
-                        status?.available ? "bg-green-500" : "bg-gray-400"
+                        status?.availability === "Available" ? "bg-green-500" : "bg-gray-400"
                       }`}
                     />
                   </div>
@@ -117,10 +128,10 @@ const DeveloperProfile = () => {
                       <div className="flex items-center gap-2">
                         <span
                           className={`text-sm font-semibold ${
-                            status?.available ? "text-green-400" : "text-gray-500"
+                            status?.availability === "Available" ? "text-green-400" : "text-gray-500"
                           }`}
                         >
-                          ● {status?.available ? "Available" : "Not Available"}
+                          ● {status?.availability || "Not Available"}
                         </span>
                       </div>
                     </div>

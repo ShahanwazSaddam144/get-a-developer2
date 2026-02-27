@@ -12,6 +12,7 @@ const AccountSettings = () => {
   const [modal, setModal] = useState(null);
   const [joinedDate, setJoinedDate] = useState("");
   const [lastLogin, setLastLogin] = useState("");
+  const [notification, setNotification] = useState({ show: false, message: "", type: "" });
 
   // Generate Initials (SSB)
   const getInitials = (name) => {
@@ -69,9 +70,31 @@ const AccountSettings = () => {
         const data = await res.json();
         if (data.success && data.status) {
           setAvailability(data.status.availability);
+        } else if (res.status === 404) {
+          // Profile status doesn't exist, create it with default "Available"
+          await createProfileStatus(token, "Available");
         }
       } catch (err) {
         console.error("Availability fetch error:", err);
+      }
+    };
+
+    const createProfileStatus = async (token, availabilityStatus) => {
+      try {
+        const res = await fetch("http://localhost:5000/api/profilestatus", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ availability: availabilityStatus }),
+        });
+        const data = await res.json();
+        if (data.success && data.status) {
+          setAvailability(data.status.availability);
+        }
+      } catch (err) {
+        console.error("Profile status creation error:", err);
       }
     };
 
@@ -83,7 +106,7 @@ const AccountSettings = () => {
     try {
       setAvailability(newStatus); // update UI immediately
       const token = localStorage.getItem("token");
-      await fetch("http://localhost:5000/api/profilestatus", {
+      const res = await fetch("http://localhost:5000/api/profilestatus", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -91,8 +114,36 @@ const AccountSettings = () => {
         },
         body: JSON.stringify({ availability: newStatus }),
       });
+
+      if (res.ok) {
+        setNotification({ show: true, message: "Availability updated successfully!", type: "success" });
+        setTimeout(() => setNotification({ show: false, message: "", type: "" }), 3000);
+      } else if (res.status === 404) {
+        // Profile status doesn't exist, create it
+        const createRes = await fetch("http://localhost:5000/api/profilestatus", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ availability: newStatus }),
+        });
+
+        if (createRes.ok) {
+          setNotification({ show: true, message: "Availability created successfully!", type: "success" });
+          setTimeout(() => setNotification({ show: false, message: "", type: "" }), 3000);
+        } else {
+          setNotification({ show: true, message: "Failed to create availability", type: "error" });
+          setTimeout(() => setNotification({ show: false, message: "", type: "" }), 3000);
+        }
+      } else {
+        setNotification({ show: true, message: "Failed to update availability", type: "error" });
+        setTimeout(() => setNotification({ show: false, message: "", type: "" }), 3000);
+      }
     } catch (err) {
       console.error("Availability update error:", err);
+      setNotification({ show: true, message: "Error updating availability", type: "error" });
+      setTimeout(() => setNotification({ show: false, message: "", type: "" }), 3000);
     }
   };
 
@@ -137,6 +188,15 @@ const AccountSettings = () => {
   return (
     <>
       <Navbar />
+
+      {/* Notification Toast */}
+      {notification.show && (
+        <div className={`fixed top-20 right-6 px-6 py-3 rounded-lg shadow-lg text-white z-50 ${
+          notification.type === "success" ? "bg-green-600" : "bg-red-600"
+        }`}>
+          {notification.message}
+        </div>
+      )}
 
       <div className="mt-20 text-white px-6 pb-20">
         <div className="max-w-6xl mx-auto grid md:grid-cols-4 gap-10">
