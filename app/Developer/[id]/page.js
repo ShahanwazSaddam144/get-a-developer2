@@ -10,6 +10,7 @@ const DeveloperProfile = () => {
   const router = useRouter();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState(null); // <-- added for availability
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -19,6 +20,22 @@ const DeveloperProfile = () => {
 
         if (data.success) {
           setProfile(data.profile);
+
+          // Fetch profile availability status
+          try {
+            const statusRes = await fetch(`http://localhost:5000/api/profilestatus/${params.id}`);
+            const statusData = await statusRes.json();
+
+            if (statusData.success) {
+              setStatus(statusData.status);
+            } else {
+              setStatus({ available: false }); // default if no status found
+            }
+          } catch (err) {
+            console.error("Failed to fetch profile status:", err);
+            setStatus({ available: false });
+          }
+
         } else {
           router.push("/Developer");
         }
@@ -83,7 +100,11 @@ const DeveloperProfile = () => {
                       alt={profile.name}
                       className="w-32 h-32 md:w-40 md:h-40 rounded-xl object-cover border-3 border-blue-500 shadow-2xl"
                     />
-                    <div className="absolute bottom-2 right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-[#1e1e1e] shadow-lg" />
+                    <div
+                      className={`absolute bottom-2 right-2 w-4 h-4 rounded-full border-2 border-[#1e1e1e] shadow-lg ${
+                        status?.available ? "bg-green-500" : "bg-gray-400"
+                      }`}
+                    />
                   </div>
 
                   <div className="flex-1">
@@ -94,7 +115,13 @@ const DeveloperProfile = () => {
 
                     <div className="flex items-center gap-4 mb-6">
                       <div className="flex items-center gap-2">
-                        <span className="text-green-400 text-sm font-semibold">● Available</span>
+                        <span
+                          className={`text-sm font-semibold ${
+                            status?.available ? "text-green-400" : "text-gray-500"
+                          }`}
+                        >
+                          ● {status?.available ? "Available" : "Not Available"}
+                        </span>
                       </div>
                     </div>
 

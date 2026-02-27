@@ -78,7 +78,7 @@ const AccountSettings = () => {
     fetchUser();
   }, [router]);
 
-  // Update availability on click
+  // Update availability on submit
   const updateAvailability = async (newStatus) => {
     try {
       setAvailability(newStatus); // update UI immediately
@@ -201,35 +201,42 @@ const AccountSettings = () => {
               </div>
             </div>
 
-            {/* Availability */}
+            {/* Availability (REPLACED WITH SELECT + FORM) */}
             <div className="bg-[#1e1e1e] p-8 rounded-2xl shadow-xl border border-[#2a2a2a]">
               <h3 className="text-xl font-semibold mb-6">
                 Availability Status
               </h3>
 
-              <div className="flex gap-6">
-                <button
-                  onClick={() => updateAvailability("Available")}
-                  className={`flex-1 py-3 rounded-xl font-semibold transition ${
-                    availability === "Available"
-                      ? "bg-green-700 scale-105 shadow-lg"
-                      : "bg-[#2a2a2a] hover:bg-green-800"
-                  }`}
+              <form
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  updateAvailability(availability);
+                }}
+                className="flex gap-4 items-center"
+              >
+                <select
+                  value={availability}
+                  onChange={(e) => setAvailability(e.target.value)}
+                  className="flex-1 py-3 px-4 rounded-xl bg-[#2a2a2a] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  Available for Work
-                </button>
+                  <option value="Available">Available for Work</option>
+                  <option value="Not Available">Not Available</option>
+                </select>
 
                 <button
-                  onClick={() => updateAvailability("Not Available")}
-                  className={`flex-1 py-3 rounded-xl font-semibold transition ${
-                    availability === "Not Available"
-                      ? "bg-red-600 scale-105 shadow-lg"
-                      : "bg-[#2a2a2a] hover:bg-red-700"
-                  }`}
+                  type="submit"
+                  className="bg-blue-600 hover:bg-blue-700 py-3 px-6 rounded-xl font-semibold transition"
                 >
-                  Not Available
+                  Update
                 </button>
-              </div>
+              </form>
+
+              <p className="mt-4 text-gray-400">
+                Current Status:{" "}
+                <span className={availability === "Available" ? "text-green-400" : "text-red-500"}>
+                  {availability}
+                </span>
+              </p>
             </div>
 
             {/* Danger Zone */}
