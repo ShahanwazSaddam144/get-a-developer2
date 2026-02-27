@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const Auth = require("./controllers/auth");
 const Profile = require("./controllers/profile");
 const Comment = require("./controllers/comments");
+const profileStatus = require("./controllers/profilestatus");
 const Port = process.env.PORT || 5000;
 const app = express();
 
@@ -31,6 +32,7 @@ app.use(limiter);
 app.use("/api/auth", Auth, limiter);
 app.use("/api", Profile, limiter);
 app.use("/api", Comment, limiter);
+app.use("/api", profileStatus, limiter);
 
 // Mongoose connect
 mongoose
@@ -44,10 +46,10 @@ mongoose
   });
 
 // Server connect
-app.listen(7860,(err)=>{
+app.listen(Port,(err)=>{
     if(err){
         console.error("❌❌ Error Connecting Server");
     }else{
-        console.log(`✅✅ Server Running at http://localhost:7860`);
+        console.log(`✅✅ Server Running at http://localhost:${Port}`);
     }
 });
