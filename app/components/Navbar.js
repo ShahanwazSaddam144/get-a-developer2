@@ -7,7 +7,6 @@ import {
   Bell,
   X,
   Settings,
-  LayoutDashboard,
   Code,
   LifeBuoy,
   User,
@@ -18,6 +17,8 @@ const Navbar = () => {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [notifications, setNotifications] = useState([]);
+  const [showNotificationBox, setShowNotificationBox] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -35,7 +36,21 @@ const Navbar = () => {
         if (!res.ok) throw new Error("Unauthorized");
         return res.json();
       })
-      .then((data) => setUser(data.user))
+      .then((data) => {
+        setUser(data.user);
+
+        const firstLogin = localStorage.getItem("firstLogin");
+
+        if (!firstLogin) {
+          const welcomeNotification = {
+            id: Date.now(),
+            message: `Welcome to Get-a-Developer, ${data.user.name}! 🚀`,
+          };
+
+          setNotifications([welcomeNotification]);
+          localStorage.setItem("firstLogin", "done");
+        }
+      })
       .catch(() => localStorage.clear())
       .finally(() => setLoading(false));
   }, []);
@@ -50,16 +65,8 @@ const Navbar = () => {
         .toUpperCase()
     : "";
 
-  const handleLogout = async () => {
-    const token = localStorage.getItem("token");
-    await fetch("http://localhost:5000/api/auth/logout", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    localStorage.clear();
-    setUser(null);
-    router.push("/");
+  const deleteNotification = (id) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
   };
 
   return (
@@ -74,18 +81,60 @@ const Navbar = () => {
 
         <div className="flex items-center gap-6">
           {user && (
-            <div className="hidden md:flex items-center gap-5">
-              <button className="relative hover:text-blue-400 transition">
+            <div className="hidden md:flex items-center gap-5 relative">
+              <button
+                className="relative hover:text-blue-400 transition"
+                onClick={() =>
+                  setShowNotificationBox(!showNotificationBox)
+                }
+              >
                 <Bell size={22} />
                 <span className="absolute -top-1 -right-1 bg-blue-600 text-xs px-1.5 rounded-full">
-                  2
+                  {notifications.length}
                 </span>
               </button>
 
-              <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-bold cursor-pointer hover:scale-105 transition"
-              onClick={()=>{router.push("/Profile")}}>
+              <div
+                className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-bold cursor-pointer hover:scale-105 transition"
+                onClick={() => router.push("/Profile")}
+              >
                 {initials}
               </div>
+
+              {showNotificationBox && (
+                <div className="absolute top-12 right-0 w-[350px] bg-[#1e1e1e] border border-gray-700 rounded-2xl shadow-2xl p-5">
+                  <div className="flex justify-between items-center mb-3">
+                    <h3 className="text-lg font-semibold text-green-400">
+                      Notification
+                    </h3>
+                  </div>
+
+                  {notifications.length === 0 ? (
+                    <p className="text-sm text-gray-400">
+                      No notifications
+                    </p>
+                  ) : (
+                    notifications.map((item) => (
+                      <div
+                        key={item.id}
+                        className="flex justify-between items-start mb-3"
+                      >
+                        <p className="text-sm text-gray-300 leading-relaxed pr-2">
+                          {item.message}
+                        </p>
+                        <button
+                          onClick={() =>
+                            deleteNotification(item.id)
+                          }
+                          className="text-gray-400 hover:text-red-400 transition"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
             </div>
           )}
 
@@ -126,18 +175,58 @@ const Navbar = () => {
           </button>
         </div>
 
+        {/* Mobile Notification + Avatar */}
         {user && (
-          <div className="md:hidden flex items-center gap-5 px-6 py-4 border-b border-[#2A2A2A]">
-            <div className="w-11 h-11 rounded-full bg-blue-600 flex items-center justify-center font-bold">
-              {initials}
+          <div className="md:hidden p-6 border-b border-[#2A2A2A]">
+            <div className="flex items-center gap-4 mb-4">
+              <div
+                className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-bold cursor-pointer"
+                onClick={() => router.push("/Profile")}
+              >
+                {initials}
+              </div>
+
+              <button
+                className="relative hover:text-blue-400 transition"
+                onClick={() =>
+                  setShowNotificationBox(!showNotificationBox)
+                }
+              >
+                <Bell size={22} />
+                <span className="absolute -top-1 -right-1 bg-blue-600 text-xs px-1.5 rounded-full">
+                  {notifications.length}
+                </span>
+              </button>
             </div>
 
-            <button className="relative hover:text-blue-400 transition">
-              <Bell size={20} />
-              <span className="absolute -top-1 -right-1 bg-blue-600 text-xs px-1.5 rounded-full">
-                2
-              </span>
-            </button>
+            {showNotificationBox && (
+              <div className="bg-[#1e1e1e] border border-gray-700 rounded-2xl shadow-2xl p-4">
+                {notifications.length === 0 ? (
+                  <p className="text-sm text-gray-400">
+                    No notifications
+                  </p>
+                ) : (
+                  notifications.map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex justify-between items-start mb-3"
+                    >
+                      <p className="text-sm text-gray-300 pr-2">
+                        {item.message}
+                      </p>
+                      <button
+                        onClick={() =>
+                          deleteNotification(item.id)
+                        }
+                        className="text-gray-400 hover:text-red-400 transition"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
           </div>
         )}
 
@@ -151,24 +240,22 @@ const Navbar = () => {
           </button>
 
           {user && (
-            <>
-              <button
-                onClick={() => router.push("/Profile")}
-                className="flex items-center gap-3 hover:text-blue-400 transition"
-              >
-                <User size={18} />
-                Profile
-              </button>
-            </>
+            <button
+              onClick={() => router.push("/Profile")}
+              className="flex items-center gap-3 hover:text-blue-400 transition"
+            >
+              <User size={18} />
+              Profile
+            </button>
           )}
 
-                <button
-                onClick={() => router.push("/Developer")}
-                className="flex items-center gap-3 hover:text-blue-400 transition"
-              >
-                <Code size={18} />
-                Developers
-              </button>
+          <button
+            onClick={() => router.push("/Developer")}
+            className="flex items-center gap-3 hover:text-blue-400 transition"
+          >
+            <Code size={18} />
+            Developers
+          </button>
 
           <button
             onClick={() => router.push("/support")}
@@ -178,26 +265,15 @@ const Navbar = () => {
             Support
           </button>
 
-          <div className="pt-6 border-t border-[#2A2A2A]">
+          <div className="border-t border-gray-400">
             <button
-              onClick={() => router.push("/settings")}
-              className="flex items-center gap-3 hover:text-blue-400 transition"
+              onClick={() => router.push("/Settings")}
+              className="flex items-center gap-3 hover:text-blue-400 mt-3 transition"
             >
               <Settings size={18} />
               Settings
             </button>
           </div>
-
-          {user && (
-            <div className="pt-6 border-t border-[#2A2A2A]">
-              <button
-                onClick={handleLogout}
-                className="text-red-400 hover:underline"
-              >
-                Logout
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </>
