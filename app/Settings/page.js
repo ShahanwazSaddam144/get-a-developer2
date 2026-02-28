@@ -13,6 +13,7 @@ const AccountSettings = () => {
   const [joinedDate, setJoinedDate] = useState("");
   const [lastLogin, setLastLogin] = useState("");
   const [notification, setNotification] = useState({ show: false, message: "", type: "" });
+  const [messages, setMessages] = useState([]);
 
   // Generate Initials (SSB)
   const getInitials = (name) => {
@@ -47,6 +48,9 @@ const AccountSettings = () => {
           setLastLogin(
             new Date(data.user.lastLogin || Date.now()).toLocaleString()
           );
+
+          // Fetch messages from profiles where this user sent messages
+          fetchUserMessages(data.user._id, token);
 
           // Fetch availability
           fetchAvailability(token);
@@ -95,6 +99,22 @@ const AccountSettings = () => {
         }
       } catch (err) {
         console.error("Profile status creation error:", err);
+      }
+    };
+
+    const fetchUserMessages = async (userId, token) => {
+      try {
+        const res = await fetch(`http://localhost:5000/api/user-messages/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json();
+        if (data.success) {
+          setMessages(data.userMessages || []);
+        }
+      } catch (err) {
+        console.error("Failed to fetch user messages:", err);
       }
     };
 
@@ -297,6 +317,34 @@ const AccountSettings = () => {
                   {availability}
                 </span>
               </p>
+            </div>
+
+            {/* Messages Section */}
+            <div className="bg-[#1e1e1e] p-8 rounded-2xl shadow-xl border border-[#2a2a2a]">
+              <h3 className="text-xl font-semibold mb-6">
+                Received Messages ({messages.length})
+              </h3>
+
+              {messages.length === 0 ? (
+                <p className="text-gray-400 text-center py-8">No messages received yet</p>
+              ) : (
+                <div className="space-y-4 max-h-96 overflow-y-auto">
+                  {messages.map((msg) => (
+                    <div key={msg._id} className="bg-[#2a2a2a] p-6 rounded-xl border border-gray-700 hover:border-blue-500 transition">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <p className="font-semibold text-blue-400">{msg.user?.name || "Unknown User"}</p>
+                          <p className="text-gray-500 text-sm">{msg.email}</p>
+                        </div>
+                        <p className="text-xs text-gray-500">
+                          {new Date(msg.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <p className="text-gray-300">{msg.message}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Danger Zone */}

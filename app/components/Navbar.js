@@ -43,7 +43,7 @@ const Navbar = () => {
         if (data.user && data.user.profileId) {
           try {
             const response = await fetch(
-              `http://localhost:5000/api/user-messages/${data.user.profileId}`
+              `http://localhost:5000/api/message-user/${data.user.profileId}`
             );
 
             const msgData = await response.json();
