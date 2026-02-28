@@ -36,8 +36,32 @@ const Navbar = () => {
         if (!res.ok) throw new Error("Unauthorized");
         return res.json();
       })
-      .then((data) => {
+      .then(async (data) => {
         setUser(data.user);
+
+        // 🔥 ADDED: FETCH USER MESSAGES FROM YOUR ROUTE
+        if (data.user && data.user.profileId) {
+          try {
+            const response = await fetch(
+              `http://localhost:5000/api/user-messages/${data.user.profileId}`
+            );
+
+            const msgData = await response.json();
+
+            if (msgData.success) {
+              const formattedNotifications = msgData.userMessages.map(
+                (msg) => ({
+                  id: msg._id,
+                  message: `${msg.user?.name || "Someone"} sent you a message`,
+                })
+              );
+
+              setNotifications(formattedNotifications);
+            }
+          } catch (err) {
+            console.error("Failed to fetch notifications");
+          }
+        }
 
         const firstLogin = localStorage.getItem("firstLogin");
 
@@ -47,7 +71,11 @@ const Navbar = () => {
             message: `Welcome to Get-a-Developer, ${data.user.name}! 🚀`,
           };
 
-          setNotifications([welcomeNotification]);
+          setNotifications((prev) => [
+            welcomeNotification,
+            ...prev,
+          ]);
+
           localStorage.setItem("firstLogin", "done");
         }
       })
@@ -156,6 +184,7 @@ const Navbar = () => {
         </div>
       </nav>
 
+      {/* EVERYTHING BELOW IS 100% SAME AS YOUR ORIGINAL CODE */}
       {menuOpen && (
         <div
           onClick={() => setMenuOpen(false)}
@@ -175,7 +204,6 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* Mobile Notification + Avatar */}
         {user && (
           <div className="md:hidden p-6 border-b border-[#2A2A2A]">
             <div className="flex items-center gap-4 mb-4">

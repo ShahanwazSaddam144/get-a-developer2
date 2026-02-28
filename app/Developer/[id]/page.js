@@ -4,13 +4,71 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Navbar from "../../components/Navbar";
 import CommentsSection from "../../components/DeveloperComponents/CommentsSection";
+import NotificationToast from "../../components/ProfileComponents/NotificationToast";
+import MessageModal from "../../components/MessageModal";
 
 const DeveloperProfile = () => {
   const params = useParams();
   const router = useRouter();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [status, setStatus] = useState(null); 
+  const [status, setStatus] = useState(null);
+
+  // message modal state
+  const [showMessageModal, setShowMessageModal] = useState(false);
+  const [messageText, setMessageText] = useState("");
+  const [sendingMessage, setSendingMessage] = useState(false);
+
+  // toast notifications
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" }); 
+
+  const showTempToast = (message, type = "success") => {
+    setToast({ show: true, message, type });
+    setTimeout(() => setToast((t) => ({ ...t, show: false })), 3000);
+  };
+
+  const handleSendMessage = async () => {
+    if (!messageText.trim()) {
+      showTempToast("Message cannot be empty", "error");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      showTempToast("You must be logged in to send a message", "error");
+      return;
+    }
+
+    setSendingMessage(true);
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/message-user/${profile._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ message: messageText }),
+        }
+      );
+
+      const data = await res.json();
+      if (data.success) {
+        showTempToast(data.message || "Message sent successfully", "success");
+        setShowMessageModal(false);
+        setMessageText("");
+      } else {
+        showTempToast(data.message || "Failed to send message", "error");
+      }
+    } catch (err) {
+      console.error("Error sending message", err);
+      showTempToast("Server error", "error");
+    } finally {
+      setSendingMessage(false);
+      // toast already handled by helper
+    }
+  };
 
   
 useEffect(() => {
@@ -88,6 +146,15 @@ useEffect(() => {
   return (
     <>
       <Navbar />
+      <NotificationToast show={toast.show} message={toast.message} type={toast.type} />
+      <MessageModal
+        show={showMessageModal}
+        onClose={() => setShowMessageModal(false)}
+        onSend={handleSendMessage}
+        messageText={messageText}
+        setMessageText={setMessageText}
+        sending={sendingMessage}
+      />
       <div className="bg-[#121212] text-white py-8 px-6 min-h-screen">
         <div className="max-w-7xl mx-auto">
           {/* Breadcrumb & Back Button */}
@@ -255,7 +322,10 @@ useEffect(() => {
                     Hire Now
                   </button>
 
-                  <button className="w-full px-6 py-3 bg-blue-500/30 hover:bg-blue-500/40 text-white font-semibold rounded-lg border border-white/30 transition">
+                  <button
+                    onClick={() => setShowMessageModal(true)}
+                    className="w-full px-6 py-3 bg-blue-500/30 hover:bg-blue-500/40 text-white font-semibold rounded-lg border border-white/30 transition"
+                  >
                     Message Seller
                   </button>
                 </div>

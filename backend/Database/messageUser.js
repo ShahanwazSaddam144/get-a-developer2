@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const commentSchema = new mongoose.Schema(
+const messageuserSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -13,10 +13,9 @@ const commentSchema = new mongoose.Schema(
       ref: "Profile",
       required: true,
     },
-    comment: { type: String, required: true },
-    rating: { type: Number, required: true },
+    message: {type: String, required: true},
   },
   { timestamps: true },
 );
 
-module.exports = mongoose.model("Comments", commentSchema);
+module.exports = mongoose.model("MessageUser", messageuserSchema);

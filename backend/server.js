@@ -7,6 +7,7 @@ const Auth = require("./controllers/auth");
 const Profile = require("./controllers/profile");
 const Comment = require("./controllers/comments");
 const profileStatus = require("./controllers/profilestatus");
+const messageUser = require("./controllers/messageUser");
 const Port = process.env.PORT || 5000;
 const app = express();
 
@@ -26,13 +27,13 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 
-app.use(limiter);
 
 //Routes
 app.use("/api/auth", Auth, limiter);
 app.use("/api", Profile, limiter);
 app.use("/api", Comment, limiter);
 app.use("/api", profileStatus, limiter);
+app.use("/api", messageUser, limiter);
 
 // Mongoose connect
 mongoose
