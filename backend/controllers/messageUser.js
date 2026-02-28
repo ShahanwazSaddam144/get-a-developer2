@@ -45,26 +45,4 @@ router.post("/message-user/:profileId", authMiddleware, async (req, res) => {
   }
 });
 
-
-router.get("/message-user/:profileId", async (req, res) => {
-  try {
-    const { profileId } = req.params;
-
-    if (!mongoose.Types.ObjectId.isValid(profileId)) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid profileId" });
-    }
-
-    const userMessages = await MessageUser.find({ profileId })
-      .populate("user", "name")
-      .sort({ createdAt: -1 });
-
-    res.status(200).json({ success: true, userMessages });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Server Error" });
-  }
-});
-
 module.exports = router;

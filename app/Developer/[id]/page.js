@@ -360,7 +360,6 @@ useEffect(() => {
                   <h3 className="font-bold text-white mb-4">Quick Contact</h3>
                   <div className="space-y-2 text-sm">
                     <p className="text-gray-400">Response time: <span className="text-green-400 font-semibold">Within 2 hours</span></p>
-                    <p className="text-gray-400">Member since: <span className="text-gray-300">Jan 2024</span></p>
                   </div>
                 </div>
               </div>
