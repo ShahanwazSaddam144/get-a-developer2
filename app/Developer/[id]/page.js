@@ -318,13 +318,9 @@ useEffect(() => {
                     <p className="text-blue-100 text-sm">{profile.price ? "/hour" : "pricing"}</p>
                   </div>
 
-                  <button className="w-full px-6 py-4 bg-white hover:bg-gray-100 text-blue-600 font-bold rounded-lg transition shadow-lg mb-3">
-                    Hire Now
-                  </button>
-
                   <button
                     onClick={() => setShowMessageModal(true)}
-                    className="w-full px-6 py-3 bg-blue-500/30 hover:bg-blue-500/40 text-white font-semibold rounded-lg border border-white/30 transition"
+                    className="w-full px-6 py-3 bg-white hover:bg-blue-50 text-blue-800 font-semibold rounded-lg border border-white/30 transition"
                   >
                     Message Seller
                   </button>
@@ -360,6 +356,9 @@ useEffect(() => {
                   <h3 className="font-bold text-white mb-4">Quick Contact</h3>
                   <div className="space-y-2 text-sm">
                     <p className="text-gray-400">Response time: <span className="text-green-400 font-semibold">Within 2 hours</span></p>
+                    <p className="text-gray-400">Email: <span className="text-green-400 font-semibold">{profile.email}</span></p>
+                    <p className="text-gray-400">Phone: <span className="text-green-400 font-semibold">{profile.phone}</span></p>
+
                   </div>
                 </div>
               </div>

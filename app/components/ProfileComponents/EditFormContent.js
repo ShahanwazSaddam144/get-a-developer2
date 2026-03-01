@@ -60,6 +60,9 @@ const EditFormContent = ({ formData, skillOptions, onChange, onSkillAdd, onSkill
           <option value="">Select your category...</option>
           <option>Frontend Developer</option>
           <option>Backend Developer</option>
+          <option>Web Developer</option>
+          <option>AI/ML</option>
+          <option>Software Developer</option>
           <option>Full Stack Developer</option>
           <option>UI/UX Designer</option>
           <option>Mobile App Developer</option>

@@ -184,4 +184,73 @@ router.get("/profile/:id", async(req,res)=>{
   }
 });
 
+router.get("/top-rated-developers", async (req, res) => {
+  try {
+    const topDevelopers = await Comments.aggregate([
+      {
+        $group: {
+          _id: "$profileId",
+          averageRating: { $avg: "$rating" },
+          totalReviews: { $sum: 1 }
+        }
+      },
+      {
+        $match: {
+          averageRating: { $gte: 4 },
+          totalReviews: { $gte: 10 }
+        }
+      },
+
+      {
+        $sort: { averageRating: -1 }
+      },
+
+      {
+        $limit: 5
+      },
+
+      {
+        $lookup: {
+          from: "profiles",
+          localField: "_id",
+          foreignField: "_id",
+          as: "profile"
+        }
+      },
+
+      {
+        $unwind: "$profile"
+      },
+
+      {
+        $project: {
+          _id: "$profile._id",
+          name: "$profile.name",
+          email: "$profile.email",
+          category: "$profile.category",
+          skills: "$profile.skills",
+          desc: "$profile.desc",
+          avator: "$profile.avator",
+          price: "$profile.price",
+          phone: "$profile.phone",
+          averageRating: { $round: ["$averageRating", 1] },
+          totalReviews: 1
+        }
+      }
+    ]);
+
+    res.status(200).json({
+      success: true,
+      developers: topDevelopers
+    });
+
+  } catch (err) {
+    console.error("Top Rated Developers Error:", err);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch top rated developers"
+    });
+  }
+});
+
 module.exports = router;
