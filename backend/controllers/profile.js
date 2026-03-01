@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Profile = require("../Database/profile");
 const { authMiddleware } = require("../middleware/authMiddleware");
+const Comments = require("../Database/comments");
 
 router.post("/profile", authMiddleware, async (req, res) => {
   try {

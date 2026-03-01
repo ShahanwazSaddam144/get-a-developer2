@@ -10,22 +10,24 @@ import "swiper/css/pagination";
 const FamousDevelopers = () => {
   const [profiles, setProfiles] = useState([]);
 
-  useEffect(() => {
-    const fetchProfiles = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/api/top-rated-developers");
-        const data = await res.json();
+useEffect(() => {
+  const fetchProfiles = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/top-rated-developers");
+      const data = await res.json();
 
-        if (data.success) {
-          setProfiles(data.data.slice(0, 5)); 
-        }
-      } catch (err) {
-        console.error("Failed to fetch profiles:", err);
+      console.log(data); 
+      
+      if (data.success) {
+        setProfiles(data.developers || []); 
       }
-    };
+    } catch (err) {
+      console.error("Failed to fetch profiles:", err);
+    }
+  };
 
-    fetchProfiles();
-  }, []);
+  fetchProfiles();
+}, []);
 
   return (
     <>
