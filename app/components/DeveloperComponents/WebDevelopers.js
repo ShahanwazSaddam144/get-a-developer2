@@ -62,7 +62,9 @@ const WebDevelopers = () => {
             >
               {profiles.map((profile) => (
                 <SwiperSlide key={profile._id}>
-                  <div className="bg-gradient-to-br from-[#1e1e1e] to-[#161616] rounded-2xl p-6 shadow-lg border border-gray-800 hover:border-blue-500/50 hover:shadow-blue-500/20 transition-all duration-300 flex flex-col h-full">
+                  <div className="bg-gradient-to-br from-[#1e1e1e] to-[#161616] rounded-2xl p-6 h-[340px] shadow-lg border border-gray-800 hover:border-blue-500/50 hover:shadow-blue-500/20 transition-all duration-300 flex flex-col">
+
+                    {/* Avatar + Name */}
                     <div className="flex items-center gap-4 mb-4">
                       <img
                         src={profile.avator}
@@ -79,6 +81,7 @@ const WebDevelopers = () => {
                       </div>
                     </div>
 
+                    {/* Skills */}
                     <div className="mb-4">
                       <p className="text-gray-300 text-sm font-medium mb-2">
                         Skills
@@ -100,10 +103,12 @@ const WebDevelopers = () => {
                       </div>
                     </div>
 
+                    {/* Description */}
                     <p className="text-gray-400 text-sm mb-4 line-clamp-3 flex-grow">
                       {profile.desc}
                     </p>
 
+                    {/* Footer */}
                     <div className="flex items-center justify-between pt-4 border-t border-gray-700">
                       <div>
                         <p className="text-gray-500 text-xs">Rate</p>
@@ -111,12 +116,14 @@ const WebDevelopers = () => {
                           ${profile.price}/hr
                         </p>
                       </div>
+
                       <Link href={`/Developer/${profile._id}`}>
                         <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-medium transition duration-300 border border-blue-500">
                           View Profile
                         </button>
                       </Link>
                     </div>
+
                   </div>
                 </SwiperSlide>
               ))}

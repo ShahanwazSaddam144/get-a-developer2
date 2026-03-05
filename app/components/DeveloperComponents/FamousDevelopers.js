@@ -61,7 +61,7 @@ useEffect(() => {
             >
               {profiles.map((profile) => (
                 <SwiperSlide key={profile._id}>
-                  <div className="bg-gradient-to-br from-[#1e1e1e] to-[#161616] rounded-2xl p-6 shadow-lg border border-gray-800 hover:border-blue-500/50 hover:shadow-blue-500/20 transition-all duration-300 flex flex-col h-full">
+                  <div className="bg-gradient-to-br from-[#1e1e1e] to-[#161616] rounded-2xl p-6 h-[340px] shadow-lg border border-gray-800 hover:border-blue-500/50 hover:shadow-blue-500/20 transition-all duration-300 flex flex-col h-full">
                     <div className="flex items-center gap-4 mb-4">
                       <img
                         src={profile.avator}
