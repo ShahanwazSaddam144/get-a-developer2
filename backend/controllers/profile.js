@@ -197,7 +197,7 @@ router.get("/top-rated-developers", async (req, res) => {
       },
       {
         $match: {
-          averageRating: { $gte: 4 },
+          averageRating: { $gte: 3 },
           totalReviews: { $gte: 10 }
         }
       },
