@@ -8,6 +8,7 @@ const Profile = require("./controllers/profile");
 const Comment = require("./controllers/comments");
 const profileStatus = require("./controllers/profilestatus");
 const messageUser = require("./controllers/messageUser");
+const NewsLetter = require("./controllers/newsletter");
 const Port = process.env.PORT || 5000;
 const app = express();
 
@@ -34,6 +35,7 @@ app.use("/api", Profile, limiter);
 app.use("/api", Comment, limiter);
 app.use("/api", profileStatus, limiter);
 app.use("/api", messageUser, limiter);
+app.use("/api", NewsLetter, limiter);
 
 // Mongoose connect
 mongoose

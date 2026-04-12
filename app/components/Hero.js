@@ -24,6 +24,9 @@ const Hero = () => {
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
+  // ✅ NEW STATE (popup)
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
+
   // Categories with Icons
   const categories = [
     { name: "Frontend Development", icon: <Code2 size={16} /> },
@@ -34,6 +37,17 @@ const Hero = () => {
     { name: "UI/UX Design", icon: <Palette size={16} /> },
   ];
 
+  // ✅ AUTH CHECK FUNCTION
+  const requireAuth = (callback) => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setShowLoginPopup(true);
+      return;
+    }
+
+    callback();
+  };
 
   // Autocomplete
   const handleSearchChange = (e) => {
@@ -53,7 +67,7 @@ const Hero = () => {
     setFilteredSuggestions(filtered);
     setShowSuggestions(true);
   };
-  
+
   useEffect(() => {
     const checkUser = async () => {
       const token = localStorage.getItem("token");
@@ -81,102 +95,146 @@ const Hero = () => {
 
   return (
     <>
-    <section
-      className="bg-[#121212] min-h-screen flex flex-col justify-start items-center text-center px-6"
-      style={{ paddingTop: "calc(80px + 2rem)" }}
-    >
-      <h1 className="text-5xl md:text-6xl font-bold mb-4 text-white mt-8">
-        Hire Top Developers <span className="text-[#1E90FF]">Instantly</span>
-      </h1>
+      <section
+        className="bg-[#121212] min-h-screen flex flex-col justify-start items-center text-center px-6"
+        style={{ paddingTop: "calc(80px + 2rem)" }}
+      >
+        <h1 className="text-5xl md:text-6xl font-bold mb-4 text-white mt-8">
+          Hire Top Developers <span className="text-[#1E90FF]">Instantly</span>
+        </h1>
 
-      <p className="text-lg md:text-xl text-[#B0B0B0] max-w-xl mb-8">
-        Connect with expert developers across multiple technologies. Chat,
-        review portfolios, and hire securely — all in one powerful platform.
-      </p>
+        <p className="text-lg md:text-xl text-[#B0B0B0] max-w-xl mb-8">
+          Connect with expert developers across multiple technologies. Chat,
+          review portfolios, and hire securely — all in one powerful platform.
+        </p>
 
-      <div className="flex flex-col sm:flex-row gap-4 mb-8">
-        <button
-          className="bg-[#1E90FF] hover:bg-[#3EA6FF] text-white font-semibold py-3 px-6 rounded-lg transition shadow-lg shadow-blue-500/20"
-          onClick={() => router.push("/Auth")}
-        >
-          Get Started
-        </button>
+        <div className="flex flex-col sm:flex-row gap-4 mb-8">
+          <button
+            className="bg-[#1E90FF] hover:bg-[#3EA6FF] text-white font-semibold py-3 px-6 rounded-lg transition shadow-lg shadow-blue-500/20"
+            onClick={()=>{router.push("/Auth")}}
+          >
+            Get Started
+          </button>
 
-        <button
-          onClick={() => router.push("/Developer")}
-          className="border border-[#1E90FF] text-[#1E90FF] hover:bg-[#1E90FF] hover:text-white font-semibold py-3 px-6 rounded-lg transition"
-        >
-          Browse Developers
-        </button>
-      </div>
-
-      {/* Search */}
-      <div className="relative flex w-full max-w-2xl mb-12">
-        <div className="flex items-center bg-[#1A1A1A] rounded-l-lg px-3">
-          <Search size={18} className="text-[#B0B0B0]" />
+          <button
+            onClick={() => requireAuth(() => router.push("/Developer"))}
+            className="border border-[#1E90FF] text-[#1E90FF] hover:bg-[#1E90FF] hover:text-white font-semibold py-3 px-6 rounded-lg transition"
+          >
+            Browse Developers
+          </button>
         </div>
 
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          onFocus={() => searchTerm && setShowSuggestions(true)}
-          onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
-          placeholder="Search developers, skills, technologies..."
-          className="flex-grow p-3 text-white bg-[#1A1A1A] outline-none placeholder-[#B0B0B0]"
-        />
-
-        <button
-          onClick={() =>
-            router.push(`/Developer?search=${encodeURIComponent(searchTerm)}`)
-          }
-          className="bg-[#1E90FF] hover:bg-[#3EA6FF] text-white px-6 rounded-r-lg transition"
-        >
-          Search
-        </button>
-
-        {/* Suggestions */}
-        {showSuggestions && filteredSuggestions.length > 0 && (
-          <div className="absolute top-full left-0 w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg mt-2 shadow-lg z-50">
-            {filteredSuggestions.map((suggestion, index) => (
-              <div
-                key={index}
-                onClick={() => {
-                  router.push(
-                    `/Developer?category=${encodeURIComponent(
-                      suggestion.name
-                    )}`
-                  );
-                }}
-                className="flex items-center gap-3 px-4 py-3 text-white hover:bg-[#1E90FF] cursor-pointer transition"
-              >
-                {suggestion.icon}
-                {suggestion.name}
-              </div>
-            ))}
+        {/* Search */}
+        <div className="relative flex w-full max-w-2xl mb-12">
+          <div className="flex items-center bg-[#1A1A1A] rounded-l-lg px-3">
+            <Search size={18} className="text-[#B0B0B0]" />
           </div>
-        )}
-      </div>
 
-      {/* Categories */}
-      <div className="flex flex-wrap justify-center gap-4 mb-12">
-        {categories.map((cat, index) => (
-          <span
-            key={index}
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            onFocus={() => searchTerm && setShowSuggestions(true)}
+            onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+            placeholder="Search developers, skills, technologies..."
+            className="flex-grow p-3 text-white bg-[#1A1A1A] outline-none placeholder-[#B0B0B0]"
+          />
+
+          <button
             onClick={() =>
-              router.push(`/Developer?category=${encodeURIComponent(cat.name)}`)
+              requireAuth(() =>
+                router.push(
+                  `/Developer?search=${encodeURIComponent(searchTerm)}`
+                )
+              )
             }
-            className="flex items-center gap-2 bg-[#1E90FF]/20 text-[#1E90FF] border border-[#1E90FF]/40 px-4 py-2 rounded-full text-sm font-medium hover:bg-[#1E90FF] hover:text-white transition cursor-pointer"
+            className="bg-[#1E90FF] hover:bg-[#3EA6FF] text-white px-6 rounded-r-lg transition"
           >
-            {cat.icon}
-            {cat.name}
-          </span>
-        ))}
-      </div>
+            Search
+          </button>
 
-      <Features />
-      <Services />
-    </section>
+          {/* Suggestions */}
+          {showSuggestions && filteredSuggestions.length > 0 && (
+            <div className="absolute top-full left-0 w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg mt-2 shadow-lg z-50">
+              {filteredSuggestions.map((suggestion, index) => (
+                <div
+                  key={index}
+                  onClick={() => {
+                    requireAuth(() =>
+                      router.push(
+                        `/Developer?category=${encodeURIComponent(
+                          suggestion.name
+                        )}`
+                      )
+                    );
+                  }}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-[#1E90FF] cursor-pointer transition"
+                >
+                  {suggestion.icon}
+                  {suggestion.name}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Categories */}
+        <div className="flex flex-wrap justify-center gap-4 mb-12">
+          {categories.map((cat, index) => (
+            <span
+              key={index}
+              onClick={() =>
+                requireAuth(() =>
+                  router.push(
+                    `/Developer?category=${encodeURIComponent(cat.name)}`
+                  )
+                )
+              }
+              className="flex items-center gap-2 bg-[#1E90FF]/20 text-[#1E90FF] border border-[#1E90FF]/40 px-4 py-2 rounded-full text-sm font-medium hover:bg-[#1E90FF] hover:text-white transition cursor-pointer"
+            >
+              {cat.icon}
+              {cat.name}
+            </span>
+          ))}
+        </div>
+
+        <Features />
+        <Services />
+      </section>
+
+      {/* ✅ LOGIN POPUP */}
+      {showLoginPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50">
+          <div className="bg-[#161616] border border-blue-900/40 rounded-2xl p-8 w-[90%] max-w-md text-center shadow-2xl">
+            <h2 className="text-2xl font-bold text-white mb-3">
+              Login Required 🔐
+            </h2>
+
+            <p className="text-gray-400 text-sm mb-6">
+              You need to login first to access developers and search features.
+            </p>
+
+            <div className="flex gap-4 justify-center">
+              <button
+                onClick={() => {
+                  setShowLoginPopup(false);
+                  router.push("/Auth");
+                }}
+                className="px-5 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-semibold transition"
+              >
+                Login
+              </button>
+
+              <button
+                onClick={() => setShowLoginPopup(false)}
+                className="px-5 py-2 border border-gray-700 hover:bg-gray-800 rounded-lg text-gray-300 transition"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
