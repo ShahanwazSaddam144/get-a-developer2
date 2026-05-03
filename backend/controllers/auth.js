@@ -11,7 +11,6 @@ dotenv.config();
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
 
-
 router.post("/signin", async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -37,14 +36,18 @@ router.post("/signin", async (req, res) => {
       JWT_SECRET,
       { expiresIn: "1d" }
     );
+
     newUser.verifyToken = verifyToken;
 
     await newUser.save();
 
-    const verifyUrl = `httpx://api.get-a-developer.buttnetworks.com/api/auth/verify/${verifyToken}`;
-    sendVerificationEmail(newUser.email, newUser.name, verifyUrl).catch((err) =>
-      console.log("Email not sent:", err)
-    );
+    const verifyUrl = `https://api.get-a-developer.buttnetworks.com/api/auth/verify/${verifyToken}`;
+
+    try {
+      await sendVerificationEmail(newUser.email, newUser.name, verifyUrl);
+    } catch (err) {
+      console.log("Email not sent:", err);
+    }
 
     res.status(201).json({
       success: true,
@@ -56,7 +59,6 @@ router.post("/signin", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
 
 router.get("/verify/:token", async (req, res) => {
   try {
@@ -75,7 +77,6 @@ router.get("/verify/:token", async (req, res) => {
     res.status(400).send("Verification link expired or invalid");
   }
 });
-
 
 router.post("/login", async (req, res) => {
   try {
@@ -113,7 +114,6 @@ router.post("/login", async (req, res) => {
   }
 });
 
-
 router.get("/me", authMiddleware, async (req, res) => {
   res.status(200).json({
     success: true,
@@ -124,7 +124,6 @@ router.get("/me", authMiddleware, async (req, res) => {
     },
   });
 });
-
 
 router.post("/logout", authMiddleware, async (req, res) => {
   try {
@@ -137,7 +136,6 @@ router.post("/logout", authMiddleware, async (req, res) => {
     res.status(500).json({ message: "Logout failed" });
   }
 });
-
 
 router.delete("/delete", authMiddleware, async (req, res) => {
   try {
