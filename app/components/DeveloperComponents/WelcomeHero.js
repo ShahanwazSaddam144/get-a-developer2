@@ -19,7 +19,7 @@ const WelcomeHero = () => {
     
         const checkAuth = async () => {
           try {
-            const res = await fetch("http://api.get-a-developer.buttnetworks.com/api/auth/me", {
+            const res = await fetch("https://api.get-a-developer.buttnetworks.com/api/auth/me", {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",

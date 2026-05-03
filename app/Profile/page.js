@@ -123,7 +123,7 @@ const Profile = () => {
     const token = localStorage.getItem("token");
     if (!token) router.replace("/");
 
-    fetch("http://api.get-a-developer.buttnetworks.com/api/auth/me", { headers: { Authorization: `Bearer ${token}` } })
+    fetch("https://api.get-a-developer.buttnetworks.com/api/auth/me", { headers: { Authorization: `Bearer ${token}` } })
       .then((res) => res.json())
       .then((data) => {
         if (!data.success) router.replace("/");
@@ -131,7 +131,7 @@ const Profile = () => {
         setFormData((prev) => ({ ...prev, name: data.user.name, email: data.user.email }));
       })
       .then(() => {
-        fetch("http://api.get-a-developer.buttnetworks.com/api/my-profile", { headers: { Authorization: `Bearer ${token}` } })
+        fetch("https://api.get-a-developer.buttnetworks.com/api/my-profile", { headers: { Authorization: `Bearer ${token}` } })
           .then((res) => res.json())
           .then((data) => {
             if (data.success) setProfile(data.profile);

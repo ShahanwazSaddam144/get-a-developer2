@@ -13,7 +13,7 @@ const WebDevelopers = () => {
   useEffect(() => {
     const fetchProfiles = async () => {
       try {
-        const res = await fetch("http://api.get-a-developer.buttnetworks.com/api/user-profile");
+        const res = await fetch("https://api.get-a-developer.buttnetworks.com/api/user-profile");
         const data = await res.json();
 
         if (data.success) {

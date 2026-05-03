@@ -13,7 +13,7 @@ const FamousDevelopers = () => {
 useEffect(() => {
   const fetchProfiles = async () => {
     try {
-      const res = await fetch("http://api.get-a-developer.buttnetworks.com/api/top-rated-developers");
+      const res = await fetch("https://api.get-a-developer.buttnetworks.com/api/top-rated-developers");
       const data = await res.json();
 
       console.log(data); 

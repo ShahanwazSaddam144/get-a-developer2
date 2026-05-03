@@ -17,7 +17,7 @@ const CommentsSection = ({ profileId }) => {
 
   const fetchComments = async () => {
     try {
-      const res = await fetch(`http://api.get-a-developer.buttnetworks.com/api/comments/${profileId}`);
+      const res = await fetch(`https://api.get-a-developer.buttnetworks.com/api/comments/${profileId}`);
       const data = await res.json();
 
       if (data.success) {
@@ -49,7 +49,7 @@ const CommentsSection = ({ profileId }) => {
     setSuccess("");
 
     try {
-      const res = await fetch(`http://api.get-a-developer.buttnetworks.com/api/comments/${profileId}`, {
+      const res = await fetch(`https://api.get-a-developer.buttnetworks.com/api/comments/${profileId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

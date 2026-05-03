@@ -74,7 +74,7 @@ const Hero = () => {
       if (!token) return;
 
       try {
-        const res = await fetch("http://api.get-a-developer.buttnetworks.com/api/auth/me", {
+        const res = await fetch("https://api.get-a-developer.buttnetworks.com/api/auth/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
