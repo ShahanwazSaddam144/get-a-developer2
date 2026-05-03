@@ -15,7 +15,7 @@ const Newsletter = () => {
     try {
       setLoading(true);
 
-      const res = await fetch("http://api.get-a-developer.buttnetworks.com/api/newsletter", {
+      const res = await fetch("https://api.get-a-developer.buttnetworks.com/api/newsletter", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

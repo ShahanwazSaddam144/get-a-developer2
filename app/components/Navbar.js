@@ -29,7 +29,7 @@ const Navbar = () => {
       return;
     }
 
-    fetch("https://localhost:5000/api/auth/me", {
+    fetch("https://api.get-a-developer.buttnetworks.com/api/auth/me", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
@@ -43,7 +43,7 @@ const Navbar = () => {
         if (data.user && data.user.profileId) {
           try {
             const response = await fetch(
-              `https://localhost:5000/api/message-user/${data.user.profileId}`
+              `https://api.get-a-developer.buttnetworks.com/api/message-user/${data.user.profileId}`
             );
 
             const msgData = await response.json();
