@@ -251,7 +251,7 @@ const Profile = () => {
     }
 
     const token = localStorage.getItem("token");
-    const url = isEditing ? "http://localhost:5000/api/my-profile" : "http://localhost:5000/api/profile";
+    const url = isEditing ? "https://api.get-a-developer.buttnetworks.com/api/my-profile" : "https://api.get-a-developer.buttnetworks.com/api/profile";
     const method = isEditing ? "PUT" : "POST";
 
     const res = await fetch(url, {
@@ -288,7 +288,7 @@ const Profile = () => {
 
   const handleDelete = async () => {
     const token = localStorage.getItem("token");
-    const res = await fetch("http://localhost:5000/api/my-profile-delete", {
+    const res = await fetch("https://api.get-a-developer.buttnetworks.com/api/my-profile-delete", {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
