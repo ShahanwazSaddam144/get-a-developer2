@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 const Newsletter = () => {
   const [email, setEmail] = useState("");
-  const [toast, setToast] = useState(null); // {type: "success" | "error", message: ""}
+  const [toast, setToast] = useState(null); 
   const [loading, setLoading] = useState(false);
 
   const handleSubscribe = async () => {

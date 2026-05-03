@@ -1,7 +1,10 @@
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
+const dns = require("dns"); 
 
 dotenv.config();
+
+dns.setDefaultResultOrder("ipv4first");
 
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_PASS = process.env.EMAIL_PASS;
@@ -12,6 +15,7 @@ const transporter = nodemailer.createTransport({
     user: EMAIL_USER,
     pass: EMAIL_PASS,
   },
+  family: 4 
 });
 
 const sendVerificationEmail = async (to, name, verifyUrl) => {
