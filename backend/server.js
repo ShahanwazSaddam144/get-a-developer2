@@ -9,12 +9,18 @@ const Comment = require("./controllers/comments");
 const profileStatus = require("./controllers/profilestatus");
 const messageUser = require("./controllers/messageUser");
 const NewsLetter = require("./controllers/newsletter");
-const Port = process.env.PORT || 5000;
 const app = express();
-
 dotenv.config();
-app.use(cors());
 app.use(express.json());
+
+app.use(cors({
+  origin: [
+    "https://get-a-developer.buttnetworks.com"
+  ],
+  credentials: true
+}));
+
+const Port = process.env.PORT;
 
 // Rate Limit
 const limiter = rateLimit({
