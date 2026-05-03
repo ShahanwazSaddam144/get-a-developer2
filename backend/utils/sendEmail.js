@@ -17,10 +17,10 @@ const transporter = nodemailer.createTransport({
     user: EMAIL_USER,
     pass: EMAIL_PASS,
   },
-  family: 4,
   tls: {
     rejectUnauthorized: false
-  }
+  },
+  socketTimeout: 10000
 });
 
 const sendVerificationEmail = async (to, name, verifyUrl) => {
