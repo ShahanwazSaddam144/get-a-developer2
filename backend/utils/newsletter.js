@@ -28,13 +28,13 @@ const sendNewsletterEmail = async (email) => {
               <p style="margin:0;color:#d1d5db;font-size:15px;line-height:1.75;">Expect curated developer stories, portfolio inspiration, and gated opportunities delivered with a clean, modern experience.</p>
             </div>
 
-            <a href="https://buttnetworks.com" style="display:inline-flex;align-items:center;justify-content:center;padding:12px 22px;background:linear-gradient(90deg,#1e90ff,#2563eb);color:#ffffff;text-decoration:none;border-radius:12px;font-weight:700;">Visit Butt Networks</a>
+            <a href="https://get-a-developer.buttnetworks.com" style="display:inline-flex;align-items:center;justify-content:center;padding:12px 22px;background:linear-gradient(90deg,#1e90ff,#2563eb);color:#ffffff;text-decoration:none;border-radius:12px;font-weight:700;">Visit Butt Networks</a>
 
             <div style="margin-top:32px;padding:20px;background:#0f172a;border:1px solid #1e293b;border-radius:16px;">
               <p style="margin:0 0 14px;color:#94a3b8;font-size:13px;">Quick links:</p>
               <div style="display:flex;flex-wrap:wrap;gap:10px;">
-                <a href="https://buttnetworks.com" style="color:#93c5fd;text-decoration:none;font-size:13px;">Home</a>
-                <a href="https://buttnetworks.com/developer" style="color:#93c5fd;text-decoration:none;font-size:13px;">Developers</a>
+                <a href="https://get-a-developer.buttnetworks.com" style="color:#93c5fd;text-decoration:none;font-size:13px;">Home</a>
+                <a href="/developer" style="color:https://get-a-developer.buttnetworks.com/Auth#93c5fd;text-decoration:none;font-size:13px;">Developers</a>
                 <a href="https://buttnetworks.com/auth" style="color:#93c5fd;text-decoration:none;font-size:13px;">Sign In</a>
                 <a href="https://buttnetworks.com/support" style="color:#93c5fd;text-decoration:none;font-size:13px;">Support</a>
               </div>
