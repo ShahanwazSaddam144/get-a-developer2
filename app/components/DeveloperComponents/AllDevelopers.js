@@ -22,7 +22,7 @@ const AllDevelopers = ({ searchQuery }) => {
 
     const fetchProfiles = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/user-profile");
+        const res = await fetch("http://api.get-a-developer.buttnetworks.com/api/user-profile");
         const data = await res.json();
 
         if (data.success) {

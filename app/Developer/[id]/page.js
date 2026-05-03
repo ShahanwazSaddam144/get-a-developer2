@@ -42,7 +42,7 @@ const DeveloperProfile = () => {
     setSendingMessage(true);
     try {
       const res = await fetch(
-        `http://localhost:5000/api/message-user/${profile._id}`,
+        `http://api.get-a-developer.buttnetworks.com/api/message-user/${profile._id}`,
         {
           method: "POST",
           headers: {
@@ -75,7 +75,7 @@ useEffect(() => {
   const fetchProfile = async () => {
     try {
       // Fetch profile by profile ID
-      const res = await fetch(`http://localhost:5000/api/profile/${params.id}`);
+      const res = await fetch(`http://api.get-a-developer.buttnetworks.com/api/profile/${params.id}`);
       const data = await res.json();
 
       if (data.success) {
@@ -86,7 +86,7 @@ useEffect(() => {
         if (profileData.user) {
           try {
             const statusRes = await fetch(
-              `http://localhost:5000/api/profilestatus/${profileData.user}`
+              `http://api.get-a-developer.buttnetworks.com/api/profilestatus/${profileData.user}`
             );
             const statusData = await statusRes.json();
 

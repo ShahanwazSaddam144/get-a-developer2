@@ -30,7 +30,7 @@ const AccountSettings = () => {
       try {
         const token = localStorage.getItem("token");
 
-        const res = await fetch("http://localhost:5000/api/auth/me", {
+        const res = await fetch("http://api.get-a-developer.buttnetworks.com/api/auth/me", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -66,7 +66,7 @@ const AccountSettings = () => {
 
     const fetchAvailability = async (token) => {
       try {
-        const res = await fetch("http://localhost:5000/api/profilestatus", {
+        const res = await fetch("http://api.get-a-developer.buttnetworks.com/api/profilestatus", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -85,7 +85,7 @@ const AccountSettings = () => {
 
     const createProfileStatus = async (token, availabilityStatus) => {
       try {
-        const res = await fetch("http://localhost:5000/api/profilestatus", {
+        const res = await fetch("http://api.get-a-developer.buttnetworks.com/api/profilestatus", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -104,7 +104,7 @@ const AccountSettings = () => {
 
     const fetchUserMessages = async (userId, token) => {
       try {
-        const res = await fetch(`http://localhost:5000/api/user-messages/${userId}`, {
+        const res = await fetch(`http://api.get-a-developer.buttnetworks.com/api/user-messages/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -126,7 +126,7 @@ const AccountSettings = () => {
     try {
       setAvailability(newStatus); // update UI immediately
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/profilestatus", {
+      const res = await fetch("http://api.get-a-developer.buttnetworks.com/api/profilestatus", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -140,7 +140,7 @@ const AccountSettings = () => {
         setTimeout(() => setNotification({ show: false, message: "", type: "" }), 3000);
       } else if (res.status === 404) {
         // Profile status doesn't exist, create it
-        const createRes = await fetch("http://localhost:5000/api/profilestatus", {
+        const createRes = await fetch("http://api.get-a-developer.buttnetworks.com/api/profilestatus", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -172,7 +172,7 @@ const AccountSettings = () => {
 
     try {
       if (modal === "logout") {
-        await fetch("http://localhost:5000/api/auth/logout", {
+        await fetch("http://api.get-a-developer.buttnetworks.com/api/auth/logout", {
           method: "POST",
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -182,7 +182,7 @@ const AccountSettings = () => {
       }
 
       if (modal === "delete") {
-        await fetch("http://localhost:5000/api/auth/delete", {
+        await fetch("http://api.get-a-developer.buttnetworks.com/api/auth/delete", {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
         });

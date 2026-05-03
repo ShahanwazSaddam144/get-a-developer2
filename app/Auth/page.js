@@ -21,7 +21,7 @@ const Auth = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      fetch("http://localhost:5000/api/auth/me", {
+      fetch("http://api.get-a-developer.buttnetworks.com/api/auth/me", {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then((res) => res.json())
@@ -78,8 +78,8 @@ const Auth = () => {
     setMessage("");
 
     const url = isSignup
-      ? "http://localhost:5000/api/auth/signin"
-      : "http://localhost:5000/api/auth/login";
+      ? "http://api.get-a-developer.buttnetworks.com/api/auth/signin"
+      : "http://api.get-a-developer.buttnetworks.com/api/auth/login";
 
     try {
       const res = await fetch(url, {
